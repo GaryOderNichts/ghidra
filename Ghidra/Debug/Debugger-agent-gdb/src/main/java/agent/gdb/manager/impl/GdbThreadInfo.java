@@ -33,6 +33,8 @@ public class GdbThreadInfo {
 		"\\(LWP (?<tid>[0-9]+)\\)\\s*");
 	protected static final Pattern TARGET_ID_LINE_PATTERN1 = Pattern.compile("\\s*" + //
 		"process (?<tid>[0-9]+)\\s*");
+	protected static final Pattern TARGET_ID_LINE_PATTERN2 = Pattern.compile("\\s*" + //
+		"Thread (?<tid>[0-9]+)\\s*");
 
 	/**
 	 * Process a parsed GDB thread information
@@ -95,6 +97,15 @@ public class GdbThreadInfo {
 			}
 		}
 		mappingMatcher = TARGET_ID_LINE_PATTERN1.matcher(targetId);
+		if (mappingMatcher.matches()) {
+			try {
+				this.tid = Integer.parseInt(mappingMatcher.group("tid"));
+			}
+			catch (NumberFormatException e) {
+				Msg.error(this, "Could not parse target id: " + targetId, e);
+			}
+		}
+		mappingMatcher = TARGET_ID_LINE_PATTERN2.matcher(targetId);
 		if (mappingMatcher.matches()) {
 			try {
 				this.tid = Integer.parseInt(mappingMatcher.group("tid"));

@@ -33,11 +33,19 @@ public class GdbPowerPCDebuggerMappingOpinion implements DebuggerMappingOpinion 
 		new LanguageID("PowerPC:BE:64:A2-32addr");
 	protected static final LanguageID LANG_ID_PPC64_BE_A2ALT =
 		new LanguageID("PowerPC:BE:64:A2ALT-32addr");
+	protected static final LanguageID LANG_ID_PPC32_BE_GEKKO = new LanguageID("PowerPC:BE:32:Gekko_Broadway");
 	protected static final CompilerSpecID COMP_ID_DEFAULT = new CompilerSpecID("default");
 
 	protected static class GdbPowerPCBE32DefLinuxOffer extends DefaultDebuggerMappingOffer {
 		public GdbPowerPCBE32DefLinuxOffer(TargetProcess process) {
 			super(process, 100, "GDB on Linux PowerPC - 32-bit", LANG_ID_PPC32_BE, COMP_ID_DEFAULT,
+				Set.of());
+		}
+	}
+
+	protected static class GdbPowerPCGekkoBroadwayOffer extends DefaultDebuggerMappingOffer {
+		public GdbPowerPCGekkoBroadwayOffer(TargetProcess process) {
+			super(process, 100, "GDB on Gekko/Broadway", LANG_ID_PPC32_BE_GEKKO, COMP_ID_DEFAULT,
 				Set.of());
 		}
 	}
@@ -84,6 +92,9 @@ public class GdbPowerPCDebuggerMappingOpinion implements DebuggerMappingOpinion 
 		String arch = env.getArchitecture();
 		if (arch.startsWith("powerpc:32")) {
 			return Set.of(new GdbPowerPCBE32DefLinuxOffer(process));
+		}
+		else if (arch.startsWith("powerpc:750")) {
+			return Set.of(new GdbPowerPCGekkoBroadwayOffer(process));
 		}
 		else if (arch.startsWith("powerpc:A2")) {
 			return Set.of(new GdbPowerPCBE64A2LinuxOffer(process));
